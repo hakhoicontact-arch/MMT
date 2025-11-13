@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Điều khiển máy tính từ xa</title>
+    <link rel="stylesheet" href="Css\style_index_home.css" />
+</head>
+<body>
+    <header class="main-header">
+            <div class="container header-content">
+                <!-- Logo Khoa bên trái -->
+                <div class="header-left">
+                <img src="Assets\fit-logo-white.png" alt="Logo Khoa" class="logo-khoa" />
+                </div>
+
+                <!-- Giới thiệu môn học ở giữa -->
+                <div class="header-center">
+                <h1>ĐỒ ÁN MẠNG MÁY TÍNH</h1>
+                <p class="intro">Thiết kế ứng dụng web điều khiển máy tính từ xa</p>
+                </div>
+
+                <!-- Tên nhóm + logo nhóm bên phải -->
+                <div class="header-right">
+                <div class="group-info">
+                    <p><strong>Nhóm 7</strong></p>
+                    <p>GVHD: ThS. Nguyễn Văn A</p>
+                </div>
+                <img src="https://via.placeholder.com/80x80?text=LOGO+NHÓM" alt="Logo Nhóm" class="logo-nhom" />
+                </div>
+            </div>
+        </header>
+    <div class="container">
+        
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="apps">Quản lý Ứng dụng</button>
+            <button class="tab-btn" data-tab="processes">Quản lý Tiến trình</button>
+            <button class="tab-btn" data-tab="screenshot">Chụp màn hình</button>
+            <button class="tab-btn" data-tab="keylogger">Keylogger</button>
+            <button class="tab-btn" data-tab="power">Tắt / Khởi động lại</button>
+            <button class="tab-btn" data-tab="webcam">Webcam</button>
+        </div>
+
+        <!-- [1] Quản lý Ứng dụng -->
+        <div id="apps" class="tab-content active">
+            <h3>Quản lý Ứng dụng</h3>
+            <button id="list-apps" class="btn primary">Liệt kê</button>
+            <table id="apps-table">
+                <thead>
+                    <tr>
+                        <th>Tên ứng dụng</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- [2] Quản lý Tiến trình -->
+        <div id="processes" class="tab-content">
+            <h3>Quản lý Tiến trình</h3>
+            <div class="search-bar">
+                <input type="text" id="process-search" placeholder="Tìm kiếm tiến trình..." />
+            </div>
+            <button id="list-processes" class="btn primary">Liệt kê</button>
+            <button id="start-process-btn" class="btn success">Khởi động mới</button>
+            <table id="processes-table">
+                <thead>
+                    <tr>
+                        <th>PID</th>
+                        <th>Tên</th>
+                        <th>CPU</th>
+                        <th>RAM</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- [3] Chụp màn hình -->
+        <div id="screenshot" class="tab-content">
+            <h3>Chụp màn hình</h3>
+            <button id="take-screenshot" class="btn primary">Chụp màn hình</button>
+            <button id="save-screenshot" class="btn success" style="display:none;">Lưu ảnh</button>
+            <div id="screenshot-area">
+                <img id="screenshot-img" src="" alt="Chưa có ảnh" />
+            </div>
+        </div>
+
+        <!-- [4] Keylogger -->
+        <div id="keylogger" class="tab-content">
+            <h3>Ghi lại phím bấm</h3>
+            <button id="start-keylogger" class="btn success">Bắt đầu</button>
+            <button id="stop-keylogger" class="btn danger" disabled>Dừng</button>
+            <button id="clear-log" class="btn secondary">Xóa log</button>
+            <div id="keylog-display" class="log-box"></div>
+        </div>
+
+        <!-- [5] Tắt / Khởi động lại -->
+        <div id="power" class="tab-content">
+            <h3>Điều khiển nguồn</h3>
+            <button id="shutdown-btn" class="btn danger">Tắt máy</button>
+            <button id="restart-btn" class="btn warning">Khởi động lại</button>
+            <div id="power-status" class="status"></div>
+        </div>
+
+        <!-- [6] Webcam -->
+        <div id="webcam" class="tab-content">
+            <h3>Điều khiển Webcam</h3>
+            <div class="warning-box">
+                <strong>Cảnh báo:</strong> Bạn đang truy cập webcam của thiết bị.
+            </div>
+            <button id="webcam-on" class="btn success">Bật Webcam</button>
+            <button id="webcam-off" class="btn danger" disabled>Tắt Webcam</button>
+            <div id="webcam-stream">
+                <img id="webcam-img" src="" alt="Webcam chưa bật" />
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>© 2025 - Đồ án Mạng Máy Tính - Nhóm 7 | Hệ thống điều khiển từ xa</p>
+        </div>
+    </footer>
+
+    <script src="Js\script.js"></script>
+</body>
+</html>
