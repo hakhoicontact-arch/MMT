@@ -1,31 +1,25 @@
-// Program.cs
 using RemoteControlServer.Hubs;
 using RemoteControlServer.Connections;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<AgentManager>();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials()
-              .SetIsOriginAllowed(_ => true);
-    });
-});
+builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+    .SetIsOriginAllowed(_ => true)));
 
 var app = builder.Build();
 
-app.UseCors("AllowAll");
-app.UseStaticFiles(); // phục vụ Client từ wwwroot
+app.UseCors();
+app.UseStaticFiles();
 app.UseRouting();
 
-app.MapHub<ControlHub>("/controlhub");
+app.MapHub<ControlHub>("/control");
+app.MapHub<ControlHub>("/agent");
 
-app.MapGet("/", () => "Server is running. Go to /index.html");
+app.MapFallbackToFile("index.html");
 
-app.Run();
+app.Run("http://0.0.0.0:8080");

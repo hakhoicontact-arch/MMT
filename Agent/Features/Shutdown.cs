@@ -1,15 +1,27 @@
 // Features/Shutdown.cs
-public static class Shutdown
+using System.Diagnostics;
+using System.Text.Json;
+
+namespace RemoteControlAgent.Features
 {
-    public static async Task Execute(string mode)
+    public class ShutdownFeature : IAgentFeature
     {
-        var psi = new ProcessStartInfo
+        public string Action => "shutdown";
+
+        public void Execute(JsonElement request, AgentController controller)
         {
-            FileName = "shutdown",
-            Arguments = mode == "shutdown" ? "/s /t 0" : "/r /t 0",
-            UseShellExecute = false
-        };
-        Process.Start(psi);
-        await Task.Delay(1000);
+            var action = request.GetProperty("action").GetString();
+
+            if (action == "shutdown")
+            {
+                Process.Start(new ProcessStartInfo("shutdown", "/s /t 0") { CreateNoWindow = true });
+                controller.SendResponse("shutdown", "ok");
+            }
+            else if (action == "restart")
+            {
+                Process.Start(new ProcessStartInfo("shutdown", "/r /t 0") { CreateNoWindow = true });
+                controller.SendResponse("restart", "ok");
+            }
+        }
     }
 }

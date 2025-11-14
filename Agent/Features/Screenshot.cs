@@ -1,29 +1,53 @@
 // Features/Screenshot.cs
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Text.Json;
 
-public static class Screenshot
+namespace RemoteControlAgent.Features
 {
-    public static async Task Capture(HubConnection connection)
+    public class ScreenshotFeature : IAgentFeature
     {
-        var bmp = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-        using var g = Graphics.FromImage(bmp);
-        g.CopyFromScreen(0, 0, 0, 0, bmp.Size);
+        public string Action => "screenshot";
 
-        using var stream = new MemoryStream();
-        bmp.Save(stream, ImageFormat.Png);
-        var bytes = stream.ToArray();
-
-        // Gửi binary theo chunk
-        int chunkSize = 1024 * 32; // 32KB
-        await connection.SendAsync("SendToClient", Context.ConnectionId, new { binary_start = true });
-
-        for (int i = 0; i < bytes.Length; i += chunkSize)
+        public void Execute(JsonElement request, AgentController controller)
         {
-            var chunk = bytes.Skip(i).Take(chunkSize).ToArray();
-            await connection.SendAsync("SendToClient", Context.ConnectionId, new { binary_chunk = Convert.ToBase64String(chunk) });
-        }
+            try
+            {
+                using var bmp = new Bitmap(
+                    Screen.PrimaryScreen.Bounds.Width,
+                    Screen.PrimaryScreen.Bounds.Height,
+                    PixelFormat.Format32bppArgb);
 
-        await connection.SendAsync("SendToClient", Context.ConnectionId, new { binary_end = true });
+                using (var graphics = Graphics.FromImage(bmp))
+                {
+                    graphics.CopyFromScreen(
+                        Screen.PrimaryScreen.Bounds.X,
+                        Screen.PrimaryScreen.Bounds.Y,
+                        0, 0,
+                        bmp.Size,
+                        CopyPixelOperation.SourceCopy);
+                }
+
+                using var ms = new MemoryStream();
+                bmp.Save(ms, ImageFormat.Jpeg);
+                var bytes = ms.ToArray();
+
+                const int chunkSize = 64 * 1024; // 64KB
+                controller.SendBinaryStart("screenshot");
+
+                for (int i = 0; i < bytes.Length; i += chunkSize)
+                {
+                    var chunk = bytes.Skip(i).Take(chunkSize).ToArray();
+                    controller.SendBinaryChunk(chunk);
+                    Thread.Sleep(10);
+                }
+
+                controller.SendBinaryEnd();
+            }
+            catch (Exception ex)
+            {
+                controller.SendResponse("error", ex.Message);
+            }
+        }
     }
 }
