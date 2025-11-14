@@ -8,6 +8,19 @@ namespace RemoteControlAgent.Features
     {
         public string Action => "process_list";
 
+        private static string FormatBytes(long bytes)
+        {
+            string[] suffixes = { "B", "KB", "MB", "GB" };
+            int i = 0;
+            double dbl = bytes;
+            while (dbl >= 1024 && i < suffixes.Length - 1)
+            {
+                dbl /= 1024;
+                i++;
+            }
+            return $"{dbl:0.##} {suffixes[i]}";
+        }
+
         public void Execute(JsonElement request, AgentController controller)
         {
             var processes = Process.GetProcesses()
@@ -43,17 +56,6 @@ namespace RemoteControlAgent.Features
             catch { }
         }
 
-    private static string FormatBytes(long bytes)
-    {
-        string[] suffixes = { "B", "KB", "MB", "GB" };
-        int i = 0;
-        double dbl = bytes;
-        while (dbl >= 1024 && i < suffixes.Length - 1)
-        {
-            dbl /= 1024;
-            i++;
-        }
-        return $"{dbl:0.##} {suffixes[i]}";
-    }
+    
 }
 }

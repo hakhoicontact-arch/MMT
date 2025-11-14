@@ -7,10 +7,10 @@ namespace RemoteControlAgent
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Remote Control Agent - Nhóm 7");
+            Console.WriteLine("Remote Control Agent");
             Console.WriteLine("Đang khởi động...");
 
-            var socketClient = new SocketClient("ws://localhost:8080/agent"); // Thay IP Server
+            var socketClient = new SocketClient("ws://localhost:8080/agent?role=agent&agentId=PC1");
             var agent = new AgentController(socketClient);
 
             // Đăng ký các chức năng

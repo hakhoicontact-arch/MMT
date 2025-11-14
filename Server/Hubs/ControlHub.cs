@@ -6,7 +6,7 @@ using System.Text.Json;
 namespace RemoteControlServer.Hubs
 {
     public class ControlHub : Hub
-    {
+    {   
         private readonly AgentManager _agentManager;
 
         public ControlHub(AgentManager agentManager)
@@ -22,6 +22,7 @@ namespace RemoteControlServer.Hubs
             if (role == "agent")
             {
                 _agentManager.RegisterAgent(Context.ConnectionId, agentId);
+                Console.WriteLine($"Agent [{agentId}] đã kết nối: {Context.ConnectionId}");
             }
             else
             {
@@ -52,9 +53,7 @@ namespace RemoteControlServer.Hubs
             {
                 var doc = JsonDocument.Parse(json);
                 var action = doc.RootElement.GetProperty("action").GetString();
-
-                // Xác định agentId từ client (hoặc mặc định dùng first agent)
-                var agentId = "PC1"; // Có thể mở rộng chọn từ dropdown
+                var agentId = "PC1"; // Có thể mở rộng
 
                 if (action != null)
                 {
@@ -68,25 +67,26 @@ namespace RemoteControlServer.Hubs
             }
         }
 
-        // Agent gửi phản hồi → Server → Client
+        // Agent gửi phản hồi → Server → Client (người gửi lệnh)
         [HubMethodName("receive")]
         public async Task ReceiveFromAgent(object message)
         {
-            await Clients.AllExcept(Context.ConnectionId).SendAsync("receive", message);
+            await Clients.Caller.SendAsync("receive", message);
         }
 
-        // Agent gửi binary → Server → Client
+        // Agent gửi binary → Server → Client (người gửi lệnh)
         [HubMethodName("receiveBinary")]
         public async Task ReceiveBinaryFromAgent(byte[] data)
         {
-            await Clients.AllExcept(Context.ConnectionId).SendAsync("receiveBinary", data);
+            await Clients.Caller.SendAsync("receiveBinary", data);
         }
 
-        // Gửi danh sách Agent online về Client
+        // Gửi danh sách Agent online
         private async void SendOnlineAgents()
         {
             var agents = _agentManager.GetOnlineAgents().ToArray();
             await Clients.Caller.SendAsync("agents", agents);
         }
+
     }
 }

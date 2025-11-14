@@ -10,9 +10,4 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.0" />
   </ItemGroup>
 
-  <!-- TỰ ĐỘNG INCLUDE TẤT CẢ .CS TRONG THƯ MỤC CON -->
-  <ItemGroup>
-    <Compile Include="**/*.cs" Exclude="bin\**;obj\**" />
-  </ItemGroup>
-
 </Project>

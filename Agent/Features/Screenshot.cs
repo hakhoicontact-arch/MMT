@@ -1,4 +1,5 @@
 // Features/Screenshot.cs
+using System.Windows.Forms;  // THÊM DÒNG NÀY
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text.Json;
